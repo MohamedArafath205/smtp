@@ -22,6 +22,11 @@ const transporter = nodemailer.createTransport({
 app.post("/api/send-email", async (req, res) => {
   const { to, subject, text, html } = req.body;
 
+  // Check if 'to' field is present
+  if (!to) {
+    return res.status(400).send("Recipient email (to) is required");
+  }
+
   try {
     const info = await transporter.sendMail({
       from: process.env.HOST_FROM,
@@ -35,7 +40,7 @@ app.post("/api/send-email", async (req, res) => {
     res.status(200).send("Email sent successfully");
   } catch (error) {
     console.error("Error sending email: ", error);
-    res.status(500).send("Error sending email");
+    res.status(500).send("Error sending email: " + error.message);
   }
 });
 
