@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Import and use the SMTP router for handling email sending
 const smtpRouter = require("./api/smtp");
-app.use("/api/smtp", smtpRouter);
+app.post("/api/smtp", smtpRouter);
 
 // Start the server
 app.listen(port, () => {
