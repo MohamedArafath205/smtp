@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 try{
-  const info = await transporter.sendMail({
+  const info = transporter.sendMail({
     from: process.env.HOST_FROM, // sender address
     to: "mohamedarafath205@gmail.com", // list of receivers
     subject: "Hello ✔", // Subject line
