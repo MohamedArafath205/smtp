@@ -1,12 +1,17 @@
-// server.js
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 
-app.use(cors());
 const app = express();
+
+// CORS middleware
+app.use(cors({
+    origin: "https://sos.gdscsrmrmp.club",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+}));
+
 app.use(bodyParser.json());
 
 // Nodemailer transporter setup
