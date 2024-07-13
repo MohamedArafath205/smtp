@@ -1,28 +1,28 @@
-const express = require("express");
-const router = express.Router();
-const nodemailer = require("nodemailer");
+import nodemailer from 'nodemailer';
 
-// Nodemailer transporter setup
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: false, // Use `true` for port 465, `false` for all other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+export default async (req, res) => {
+  const { to, subject, text } = req.body;
 
-try{
-  const info = transporter.sendMail({
-    from: process.env.HOST_FROM, // sender address
-    to: "mohamedarafath205@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+  const transporter = nodemailer.createTransport({
+    service: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
   });
 
-  console.log("Message sent");
-}catch(e){
-  console.error(e);
-}
+  const mailOptions = {
+    from: process.env.SMTP_FROM,
+    to,
+    subject,
+    text,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Email sent successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to send email', error });
+  }
+};
