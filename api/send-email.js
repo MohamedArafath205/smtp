@@ -7,7 +7,7 @@ const app = express();
 
 // CORS middleware
 app.use(cors({
-    origin: ["https://sos.gdscsrmrmp.club", "http://localhost:3000"],
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
 }));
