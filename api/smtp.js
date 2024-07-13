@@ -1,28 +1,44 @@
-import nodemailer from 'nodemailer';
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
 
-export default async (req, res) => {
-  const { to, subject, text } = req.body;
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
 
-  const transporter = nodemailer.createTransport({
-    service: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // Use `true` for port 465, `false` for all other ports
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
-  const mailOptions = {
-    from: process.env.SMTP_FROM,
-    to,
-    subject,
-    text,
-  };
+// Route to handle sending emails
+app.post("/send-email", async (req, res) => {
+  const { to, subject, text, html } = req.body;
 
   try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Email sent successfully' });
+    const info = await transporter.sendMail({
+      from: process.env.HOST_FROM,
+      to,
+      subject,
+      text,
+      html,
+    });
+
+    console.log("Message sent: %s", info.messageId);
+    res.status(200).send("Email sent successfully");
   } catch (error) {
-    res.status(500).json({ message: 'Failed to send email', error });
+    console.error("Error sending email: ", error);
+    res.status(500).send("Error sending email");
   }
-};
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
