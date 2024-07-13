@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 
+// Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -12,20 +13,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-router.post("/send", async (req, res) => {
-  const { to, subject, text } = req.body;
+try{
+  const info = await transporter.sendMail({
+    from: process.env.HOST_FROM, // sender address
+    to: "mohamedarafath205@gmail.com", // list of receivers
+    subject: "Hello ✔", // Subject line
+    text: "Hello world?", // plain text body
+    html: "<b>Hello world?</b>", // html body
+  });
 
-  try {
-    const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to,
-      subject,
-      text,
-    });
-    res.status(200).send(`Email sent: ${info.response}`);
-  } catch (error) {
-    res.status(500).send(`Error sending email: ${error}`);
-  }
-});
-
-module.exports = router;
+  console.log("Message sent");
+}catch(e){
+  console.error(e);
+}
