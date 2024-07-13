@@ -8,7 +8,7 @@ const app = express();
 // CORS middleware
 app.use(cors({
     origin: "*",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
 }));
 
