@@ -10,19 +10,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+router.post("/send", async (req, res) => {
+  const { to, subject, text } = req.body;
 
-async function main() {
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: process.env.SMTP_FROM, // sender address
-    to: "mohamedarafath205@gmail.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to,
+      subject,
+      text,
+    });
+    res.status(200).send(`Email sent: ${info.response}`);
+  } catch (error) {
+    res.status(500).send(`Error sending email: ${error}`);
+  }
+});
 
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-}
-
-main().catch(console.error);
+module.exports = router;
