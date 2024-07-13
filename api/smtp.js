@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 
 // Middleware to parse JSON bodies
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
