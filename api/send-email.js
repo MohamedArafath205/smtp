@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+import { inject } from "@vercel/analytics";
 
 const app = express();
 
